@@ -4,7 +4,7 @@
 - (3) 入退場記録表示アプリケーションは、CSVファイルを一定間隔で監視してファイルが更新されたら、記録された入退出時間を表示します。
 
 ## GPIO9番に赤外線センサーを接続してカメラのオンオフを制御する
-![IMG_20250604_143416](https://github.com/user-attachments/assets/983433e9-8f49-49fc-9017-182b7c86d9ad)
+![IMG_20250604_150018](https://github.com/user-attachments/assets/d2654ca5-d8be-4b17-8963-4492818ecfe1)
 
 ## 実行イメージ
 ```bash
