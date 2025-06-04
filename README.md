@@ -21,3 +21,8 @@
 $ sudo apt install python3-qrcode
 $ qr "Hello" > qr_hello.png
 ```
+## 配線図
+### GPIO9番への赤外線センサー
+![Raspberry+Pi+162D3+C7C5BFD6B0FEBBF3B5BC PIRsensor](https://github.com/user-attachments/assets/23784deb-3a32-4661-8d20-51f86e51990b)
+### GPIO18番へのブザー
+![Raspberry+Pi+06A5A5A1C0B8%E6 Buzzer](https://github.com/user-attachments/assets/1f732fba-f57a-4223-ad2b-41e967131786)
