@@ -7,6 +7,7 @@ import sys
 
 FLUSH = True
 filepath = os.path.dirname(__file__)
+log_base_dir = os.path.join(filepath, "logs")
 
 # デフォルトのメンバー
 members = {
@@ -16,15 +17,26 @@ members = {
     "04YokohamaYoko": "",
 }
 
-# today.csvから読み込み（あれば）
-try:
-    with open(filepath + '/today.csv', "r", encoding="utf-8") as f:
-        reader = csv.reader(f)
-        mlist = list(reader)
-        members = {m[0]: m[1] for m in mlist if len(m) > 1}
-except FileNotFoundError:
-    print("today.csv not found")
+# 日付情報
+today = datetime.date.today()
+ym_str = today.strftime("%Y-%m")
+ymd_str = today.strftime("%Y-%m-%d")
+log_dir = os.path.join(log_base_dir, ym_str)
+log_path = os.path.join(log_dir, f"{ymd_str}.csv")
 
+# CSV読み込み（存在すれば）
+if os.path.exists(log_path):
+    try:
+        with open(log_path, "r", encoding="utf-8") as f:
+            reader = csv.reader(f)
+            mlist = list(reader)
+            members = {m[0]: m[1] for m in mlist if len(m) > 1}
+    except Exception as e:
+        print(f"読み込みエラー: {e}")
+else:
+    print(f"{log_path} not found")
+
+# カメラ初期化
 cap = cv2.VideoCapture(0)
 cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
 cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
@@ -65,7 +77,11 @@ try:
                     else:
                         members[name] += "," + timestamp
 
-                    with open(filepath + "/today.csv", "w", encoding="utf-8") as f:
+                    # ログディレクトリ作成
+                    os.makedirs(log_dir, exist_ok=True)
+
+                    # CSV出力
+                    with open(log_path, "w", encoding="utf-8") as f:
                         for s in sorted(members.items()):
                             times = s[1].split(',')
                             if len(times) > 4:
