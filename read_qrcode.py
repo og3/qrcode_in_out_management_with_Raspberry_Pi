@@ -10,29 +10,21 @@ from gpiozero import DigitalInputDevice
 FLUSH = True
 filepath = os.path.dirname(__file__)
 log_base_dir = os.path.join(filepath, "logs")
-
-# センサー設定（GPIO9 = BCMモードで9番ピン）
 SENSOR_PIN = 9
 pir = DigitalInputDevice(SENSOR_PIN)
 
 def load_members(log_path):
+    members = {}
     if os.path.exists(log_path):
         try:
             with open(log_path, "r", encoding="utf-8") as f:
                 reader = csv.reader(f)
-                mlist = list(reader)
-                return {m[0]: m[1] for m in mlist if len(m) > 1}
+                for row in reader:
+                    if row:
+                        members[row[0]] = ",".join(row[1:])
         except Exception as e:
             print(f"読み込みエラー: {e}")
-    else:
-        print(f"{log_path} not found")
-    # 初期メンバー
-    return {
-        "01ChibaHanako": "",
-        "02SaitamaHiroshi": "",
-        "03TokyoTaro": "",
-        "04YokohamaYoko": "",
-    }
+    return members
 
 def save_members(log_path, members):
     os.makedirs(os.path.dirname(log_path), exist_ok=True)
@@ -48,8 +40,7 @@ def run_camera():
     today = datetime.date.today()
     ym_str = today.strftime("%Y-%m")
     ymd_str = today.strftime("%Y-%m-%d")
-    log_dir = os.path.join(log_base_dir, ym_str)
-    log_path = os.path.join(log_dir, f"{ymd_str}.csv")
+    log_path = os.path.join(log_base_dir, ym_str, f"{ymd_str}.csv")
     members = load_members(log_path)
 
     cap = cv2.VideoCapture(0)
@@ -60,11 +51,11 @@ def run_camera():
     str_prv_obj = None
     event_gap = 0
 
-    print("カメラ起動 → QRコードを読み取ってください（Ctrl+Cで中断）")
+    print("カメラ起動 → QRコードを読み取ってください（最大10秒）")
 
     try:
         start_time = time.time()
-        while time.time() - start_time < 10:  # 10秒間だけカメラを起動
+        while time.time() - start_time < 10:
             ret, frame = cap.read()
             if not ret:
                 continue
@@ -75,27 +66,24 @@ def run_camera():
             if event_gap > 0:
                 event_gap -= 1
 
-            if event_gap == 0 and str_prv_obj is not None:
+            if event_gap == 0:
                 str_prv_obj = None
-                print(f"{timestamp} ##### Event trigger reset", file=sys.stderr, flush=FLUSH)
 
             for obj in decoded_objs:
-                str_dec_obj = obj.data.decode('utf-8', 'ignore')
+                name = obj.data.decode('utf-8', 'ignore')
 
-                if str_dec_obj != str_prv_obj:
-                    name = str_dec_obj
+                if name != str_prv_obj:
+                    print(f"{timestamp} ##### Detected: {name}", file=sys.stderr, flush=FLUSH)
+                    str_prv_obj = name
+
                     if name in members:
-                        print(f"{timestamp} ##### Detected: {str_dec_obj}", file=sys.stderr, flush=FLUSH)
-                        str_prv_obj = str_dec_obj
-                        if members[name] == "":
-                            members[name] = timestamp
-                        else:
-                            members[name] += "," + timestamp
-                        save_members(log_path, members)
-                        event_gap = 300
-                        print(f"{timestamp} ##### Start event_gap", file=sys.stderr, flush=FLUSH)
+                        members[name] += "," + timestamp
                     else:
-                        print(f"{timestamp} ##### Unknown QR: {str_dec_obj}", file=sys.stderr, flush=FLUSH)
+                        members[name] = timestamp
+
+                    save_members(log_path, members)
+                    event_gap = 300
+                    print(f"{timestamp} ##### Start event_gap", file=sys.stderr, flush=FLUSH)
 
     finally:
         cap.release()
