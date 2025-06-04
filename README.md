@@ -17,3 +17,8 @@
 カメラ起動 → QRコードを読み取ってください（最大10秒）
 カメラ停止
 ```
+## QRコードの作成
+```bash
+$ sudo apt install python3-qrcode
+$ qr "Hello" > qr_hello.png
+```
