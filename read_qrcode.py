@@ -73,7 +73,7 @@ def run_camera():
                 name = obj.data.decode('utf-8', 'ignore')
 
                 if name != str_prv_obj:
-                    print(f"{timestamp} ##### Detected: {name}", file=sys.stderr, flush=FLUSH)
+                    print(f"{timestamp} ##### {name} さんを検知しました。", file=sys.stderr, flush=FLUSH)
                     str_prv_obj = name
 
                     if name in members:
@@ -83,7 +83,7 @@ def run_camera():
 
                     save_members(log_path, members)
                     event_gap = 300
-                    print(f"{timestamp} ##### Start event_gap", file=sys.stderr, flush=FLUSH)
+                    print(f"{timestamp} ##### Start event_gap（連続読み取り防止用のクールタイム開始）", file=sys.stderr, flush=FLUSH)
 
     finally:
         cap.release()
