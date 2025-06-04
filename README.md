@@ -5,3 +5,15 @@
 
 ## GPIO9番に赤外線センサーを接続してカメラのオンオフを制御する
 ![IMG_20250604_143416](https://github.com/user-attachments/assets/983433e9-8f49-49fc-9017-182b7c86d9ad)
+
+## 実行イメージ
+```bash
+カメラ起動 → QRコードを読み取ってください（最大10秒）
+14:42 ##### Detected: 02SaitamaHiroshi
+14:42 ##### Start event_gap
+14:42 ##### Detected: 01ChibaHanako
+14:42 ##### Start event_gap
+カメラ停止
+カメラ起動 → QRコードを読み取ってください（最大10秒）
+カメラ停止
+```
