@@ -1,0 +1,2 @@
+# qrcode_in_out_management_with_Raspberry_Pi
+ ラズパイでQRコード入退室管理する
