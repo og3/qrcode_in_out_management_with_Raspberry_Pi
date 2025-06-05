@@ -1,0 +1,17 @@
+# GPIO設定
+SENSOR_PIN = 9
+BUZZER_PIN = 18
+
+# カメラ設定
+CAMERA_WIDTH = 640
+CAMERA_HEIGHT = 480
+CAMERA_FPS = 15
+
+# イベント間隔
+EVENT_GAP_FRAMES = 300
+
+# ログ保存先
+LOG_BASE_DIR = "logs"
+
+# QR読み取り時間（秒）
+CAMERA_RUNTIME = 10
