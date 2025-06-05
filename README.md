@@ -3,7 +3,7 @@
 - (2) 入退場記録アプリケーションはQRコードを読み取った時間をQRコードから読み取った「名前」を識別子とするレコードに記録してファイルに書き込みます。ファイルはCSV形式です。
 
 ## GPIO9番に赤外線センサーを接続してカメラのオンオフを制御する
-![IMG_20250604_150018](https://github.com/user-attachments/assets/d2654ca5-d8be-4b17-8963-4492818ecfe1)
+![IMG_20250605_093153](https://github.com/user-attachments/assets/47088b08-f669-463c-9dd0-bbc45cd00615)
 
 ## 実行イメージ
 ```bash
