@@ -14,6 +14,7 @@ def main():
     logger = LogManager()
     str_prv_obj = None
     event_gap = 0
+    gap_active = False
 
     try:
         while True:
@@ -23,13 +24,18 @@ def main():
                 start_time = time.time()
 
                 while time.time() - start_time < CAMERA_RUNTIME:
+                    timestamp = datetime.datetime.now().strftime("%H:%M")
+
                     if event_gap > 0:
                         event_gap -= 1
-                    if event_gap == 0:
+                        if not gap_active:
+                            print(f"{timestamp} ##### event_gap中（同一人物の再記録を防止中）")
+                            gap_active = True
+                    else:
                         str_prv_obj = None
+                        gap_active = False
 
                     names = qr_reader.read_frame()
-                    timestamp = datetime.datetime.now().strftime("%H:%M")
 
                     for name in names:
                         if name != str_prv_obj:
@@ -38,6 +44,7 @@ def main():
                             logger.update(name, timestamp)
                             str_prv_obj = name
                             event_gap = EVENT_GAP_FRAMES
+
                 qr_reader.release()
                 print("カメラ停止")
 
