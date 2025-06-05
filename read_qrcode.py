@@ -5,13 +5,16 @@ import datetime
 import os
 import sys
 import time
-from gpiozero import DigitalInputDevice
+from gpiozero import DigitalInputDevice, TonalBuzzer  # ← TonalBuzzerを追加
 
 FLUSH = True
 filepath = os.path.dirname(__file__)
 log_base_dir = os.path.join(filepath, "logs")
 SENSOR_PIN = 9
+BUZZER_PIN = 18
+
 pir = DigitalInputDevice(SENSOR_PIN)
+buzzer = TonalBuzzer(BUZZER_PIN)
 
 def load_members(log_path):
     members = {}
@@ -75,6 +78,11 @@ def run_camera():
                 if name != str_prv_obj:
                     print(f"{timestamp} ##### {name} さんを検知しました。", file=sys.stderr, flush=FLUSH)
                     str_prv_obj = name
+
+                    # 「ピッ」と鳴らす
+                    buzzer.play(440)  # NOTE_A4
+                    time.sleep(0.1)
+                    buzzer.stop()
 
                     if name in members:
                         members[name] += "," + timestamp
